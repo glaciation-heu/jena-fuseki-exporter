@@ -5,7 +5,9 @@ description = "Helm sidecar to extract custom metrics form Apache Jena Fuseki"
 authors = [
     { name = "Alexander Zharinov", email = "alexander.zharinov@hiro-microdatacenters.nl" }
 ]
-dependencies = []
+dependencies = [
+    "fastapi[standard]>=0.115.6",
+]
 readme = "README.md"
 requires-python = ">= 3.13"
 
