@@ -1,3 +1,3 @@
 # jena-helm-sidecar
 
-Describe your project here.
+Sidecar container for Apache Jena Fuseki Helm chart. It provides custom metrics to Prometheus.
