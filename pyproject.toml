@@ -1,7 +1,7 @@
 [project]
 name = "jena-helm-sidecar"
 version = "0.1.0"
-description = "Helm sidecar to extract custom metrics form Apache Jena Fuseki"
+description = "Pod sidecar to extract custom metrics form Apache Jena Fuseki"
 authors = [
     { name = "Alexander Zharinov", email = "alexander.zharinov@hiro-microdatacenters.nl" }
 ]
@@ -20,6 +20,7 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = []
+virtual = true
 
 [tool.hatch.metadata]
 allow-direct-references = true
