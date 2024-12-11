@@ -37,4 +37,4 @@ readinessProbe:
     path: /metrics
     port: http
 
-jenaURL: http://jena-fuseki:3030/slice/
+jenaURL: "http://jena-fuseki:3030/slice/"
