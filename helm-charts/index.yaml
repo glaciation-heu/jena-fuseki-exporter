@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  metadata-service:
+  - apiVersion: v2
+    appVersion: 0.1.22
+    created: "2024-12-11T13:52:29.891326735Z"
+    description: GLACIATION Metadata service
+    digest: 6d994ffb7c2bd8eb35cb418661184e84fdf142067068e2b3563a11a0f885841d
+    name: metadata-service
+    type: application
+    urls:
+    - https://glaciation-heu.github.io/jena-fuseki-exporter/helm-charts/metadata-service-0.1.22.tgz
+    version: 0.1.22
+generated: "2024-12-11T13:52:29.890628814Z"
