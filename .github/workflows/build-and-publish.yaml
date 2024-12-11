@@ -51,3 +51,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Publish Helm charts
+        uses: stefanprodan/helm-gh-pages@master
+        with:
+          token: ${{ github.token }}
+          charts_dir: "./server/jena-fuseki-exporter/"
+          target_dir: "./helm-charts/"
