@@ -30,14 +30,12 @@ resources: {}
 
 livenessProbe:
   httpGet:
-    path: /
+    path: /docs
     port: http
 readinessProbe:
   httpGet:
-    path: /
+    path: /metrics
     port: http
-
-ingressHostName: metadata-service
 
 jenaURL: http://jena-fuseki:3030/slice
 
