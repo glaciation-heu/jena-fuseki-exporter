@@ -1,7 +1,9 @@
+import asyncio
 import logging
 from urllib.parse import urlencode, quote
 
 import httpx
+from cachetools import cached, TTLCache
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import PlainTextResponse
 from pydantic_settings import BaseSettings
@@ -18,13 +20,14 @@ WHERE {
 
 
 settings = Settings()
+lock = asyncio.Lock()
 app = FastAPI()
 
 
 @app.get("/metrics")
 async def root():
     try:
-       graphs_number = await retrieve_graphs_number()
+        graphs_number = await retrieve_graphs_number()
     except Exception as e:
         logging.warn(e)
         raise HTTPException(status_code=502, detail="Bad Gateway: Upstream server error")
@@ -32,7 +35,14 @@ async def root():
     return PlainTextResponse(metrics)
 
 
+@cached(cache=TTLCache(maxsize=100_000, ttl=30))
 async def retrieve_graphs_number() -> int:
+    async with lock:
+        await asyncio.sleep(5)
+        return await retrieve_graphs_number()
+
+
+async def _retrieve_graphs_number() -> int:
     async with httpx.AsyncClient() as client:
         r = await client.post(
             settings.url,
