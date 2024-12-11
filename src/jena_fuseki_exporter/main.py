@@ -10,6 +10,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    cache_ttl: int = 10
     url: str = "http://jena-fuseki.integration/slice/"
     query: str = """SELECT (COUNT(DISTINCT ?g) AS ?numGraphs)
 WHERE {
@@ -21,13 +22,14 @@ WHERE {
 
 settings = Settings()
 lock = asyncio.Lock()
+cache = TTLCache(maxsize=100_000, ttl=settings.cache_ttl)
 app = FastAPI()
 
 
 @app.get("/metrics")
 async def root():
     try:
-        graphs_number = await retrieve_graphs_number()
+        graphs_number = await retrieve_cached()
     except Exception as e:
         logging.warn(e)
         raise HTTPException(status_code=502, detail="Bad Gateway: Upstream server error")
@@ -35,13 +37,16 @@ async def root():
     return PlainTextResponse(metrics)
 
 
-@cached(cache=TTLCache(maxsize=100_000, ttl=30))
-async def retrieve_graphs_number() -> int:
+async def retrieve_cached() -> int:
+    if 0 in cache:
+        return cache[0]
     async with lock:
-        return await retrieve_graphs_number()
+        result = await retrieve()
+        cache[0] = result
+    return result
 
 
-async def _retrieve_graphs_number() -> int:
+async def retrieve() -> int:
     async with httpx.AsyncClient() as client:
         r = await client.post(
             settings.url,
@@ -51,5 +56,6 @@ async def _retrieve_graphs_number() -> int:
             ),
             headers={"Content-Type": "application/x-www-form-urlencoded"},
         )
-    graphs_number = int(r.json()["results"]["bindings"][0]["numGraphs"]["value"])
+        logging.warn(f"Downstream call POST {settings.url}")
+        graphs_number = int(r.json()["results"]["bindings"][0]["numGraphs"]["value"])
     return graphs_number
