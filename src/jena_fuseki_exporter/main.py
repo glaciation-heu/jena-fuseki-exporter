@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import urlencode, quote
 
 import httpx
@@ -24,7 +25,8 @@ app = FastAPI()
 async def root():
     try:
        graphs_number = await retrieve_graphs_number()
-    except:
+    except Exception as e:
+        logging.warn(e)
         raise HTTPException(status_code=502, detail="Bad Gateway: Upstream server error")
     metrics = 'jena-dataset-graphs-number{dataset="slice"} ' + str(graphs_number)
     return PlainTextResponse(metrics)
@@ -34,7 +36,7 @@ async def retrieve_graphs_number() -> int:
     async with httpx.AsyncClient() as client:
         r = await client.post(
             settings.url,
-            data=urlencode(
+            content=urlencode(
                 {"query": settings.query},
                 quote_via=quote,
             ),
