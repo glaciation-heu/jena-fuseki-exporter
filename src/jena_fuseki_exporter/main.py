@@ -33,7 +33,7 @@ async def root():
     except Exception as e:
         logging.warn(e)
         raise HTTPException(status_code=502, detail="Bad Gateway: Upstream server error")
-    metrics = 'jena-dataset-graphs-number{dataset="slice"} ' + str(graphs_number)
+    metrics = 'jena_fuseki_exporter_graphs_count{dataset="slice"} ' + str(graphs_number)
     return PlainTextResponse(metrics)
 
 
