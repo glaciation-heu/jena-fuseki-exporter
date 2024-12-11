@@ -1,6 +1,0 @@
-apiVersion: v2
-name: metadata-service
-description: GLACIATION Metadata service
-type: application
-version: ""
-appVersion: ""
