@@ -24,6 +24,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Extract version from tag
+        id: extract_version
+        run: |
+          GIT_TAG=${{ steps.meta.outputs.tags }}
+          VERSION=${GIT_TAG#v}  # This removes the leading 'v'
+          echo "version=VERSION" >> $GITHUB_ENV
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -47,14 +54,16 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.version }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Publish Helm charts
-        uses: stefanprodan/helm-gh-pages@master
+        uses: stefanprodan/helm-gh-pages@v1
         with:
           token: ${{ github.token }}
           charts_dir: "./charts/"
           target_dir: "./helm-charts/"
+          app_version: ${{ env.version }}
+          chart_version: ${{ env.version }}
