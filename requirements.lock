@@ -40,6 +40,7 @@ httptools==0.6.4
     # via uvicorn
 httpx==0.28.1
     # via fastapi
+    # via jena-helm-sidecar
 idna==3.10
     # via anyio
     # via email-validator
