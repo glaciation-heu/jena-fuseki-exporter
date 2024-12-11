@@ -60,7 +60,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Publish Helm charts
-        uses: stefanprodan/helm-gh-pages@main
+        uses: stefanprodan/helm-gh-pages@master
         with:
           token: ${{ github.token }}
           charts_dir: "./charts/"
