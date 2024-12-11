@@ -1,3 +1,3 @@
-# jena-helm-sidecar
+# jena-fuseki-exporter
 
-Sidecar container for Apache Jena Fuseki Helm chart. It provides custom metrics to Prometheus.
+Export number of graphs from Apache Jena Fuseki to Prometheus. You can use it for performance monitoring of Jena.
