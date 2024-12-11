@@ -2,7 +2,6 @@ from urllib.parse import urlencode, quote
 
 import httpx
 from fastapi import FastAPI, HTTPException
-from fastapi.params import Depends
 from fastapi.responses import PlainTextResponse
 from pydantic_settings import BaseSettings
 
