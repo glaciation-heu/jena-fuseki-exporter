@@ -59,3 +59,5 @@ jobs:
           token: ${{ github.token }}
           charts_dir: "./charts/"
           target_dir: "./helm-charts/"
+          app_version: ${{ env.VERSION }}
+          chart_version: ${{ env.VERSION }}
