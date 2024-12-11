@@ -1,4 +1,4 @@
-name: Test and build client
+name: Build and publish Docker image
 
 # Disabled because we do not need a client yet
 #on: [push, pull_request, workflow_dispatch]
