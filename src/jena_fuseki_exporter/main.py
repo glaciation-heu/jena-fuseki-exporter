@@ -10,7 +10,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    cache_ttl: int = 10
+    cache_ttl: int = 300
     url: str = "http://jena-fuseki.integration/slice/"
     query: str = """SELECT (COUNT(DISTINCT ?g) AS ?numGraphs)
 WHERE {
