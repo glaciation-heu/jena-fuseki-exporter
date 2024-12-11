@@ -46,7 +46,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: URL
-              value: "{{ .Values.replicaCount }}"
+              value: "{{ .Values.jenaURL }}"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
