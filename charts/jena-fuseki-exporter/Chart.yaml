@@ -1,6 +1,6 @@
 apiVersion: v2
-name: metadata-service
-description: GLACIATION Metadata service
+name: jena-fuseki-exporter
+description: Metrics exporter from Apache Jena Fuseki to Prometheus
 type: application
 version: ""
 appVersion: ""
