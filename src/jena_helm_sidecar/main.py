@@ -2,11 +2,14 @@ from urllib.parse import urlencode, quote
 
 import httpx
 from fastapi import FastAPI, HTTPException
+from fastapi.params import Depends
 from fastapi.responses import PlainTextResponse
+from pydantic_settings import BaseSettings
 
 
-URL = "http://jena-fuseki.integration/slice/"
-QUERY = """SELECT (COUNT(DISTINCT ?g) AS ?numGraphs)
+class Settings(BaseSettings):
+    url: str = "http://localhost:3030/slice/"
+    query: str = """SELECT (COUNT(DISTINCT ?g) AS ?numGraphs)
 WHERE {
   GRAPH ?g {
     # Optional condition: ?s ?p ?o .
@@ -14,6 +17,7 @@ WHERE {
 }"""
 
 
+settings = Settings()
 app = FastAPI()
 
 
@@ -30,9 +34,9 @@ async def root():
 async def retrieve_graphs_number() -> int:
     async with httpx.AsyncClient() as client:
         r = await client.post(
-            URL,
+            settings.url,
             data=urlencode(
-                {"query": QUERY},
+                {"query": settings.query},
                 quote_via=quote,
             ),
             headers={"Content-Type": "application/x-www-form-urlencoded"},
