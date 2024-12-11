@@ -47,17 +47,6 @@ spec:
           env:
             - name: URL
               value: "{{ .jenaURL }}"
-        - name: drop-graphs-sidecar
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["python", "app/drop_graphs.py"]
-          env:
-            - name: TIME_WINDOW_MILLISECONDS
-              value: "{{ .Values.keepGraphs.timeWindowMilliseconds }}"
-            - name: INTERVAL_TO_CHECK_IN_SECONDS
-              value: "{{ .Values.keepGraphs.intervalToCheckInSeconds }}"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

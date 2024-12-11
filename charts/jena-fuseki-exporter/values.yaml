@@ -38,7 +38,3 @@ readinessProbe:
     port: http
 
 jenaURL: http://jena-fuseki:3030/slice
-
-keepGraphs:
-  timeWindowMilliseconds: 86400000
-  intervalToCheckInSeconds: 3600
