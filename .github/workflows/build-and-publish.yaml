@@ -26,10 +26,7 @@ jobs:
 
       - name: Extract version from tag
         id: extract_version
-        run: |
-          GIT_TAG=${{ steps.meta.outputs.tags }}
-          VERSION=${GIT_TAG#v}  # This removes the leading 'v'
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+        run: echo "VERSION=$(git describe --tags)" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
