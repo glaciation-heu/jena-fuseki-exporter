@@ -26,4 +26,4 @@ virtual = true
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/jena_helm_sidecar"]
+packages = ["src/jena_fuseki_exporter"]
