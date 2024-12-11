@@ -1,52 +1,70 @@
 name: Build and publish Docker image
 
-# Disabled because we do not need a client yet
-#on: [push, pull_request, workflow_dispatch]
-on: workflow_dispatch
+on:
+  schedule:
+    - cron: $cron-daily
+  push:
+    branches: [ $default-branch ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ $default-branch ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
 
 jobs:
-  test_and_build_client:
+  build:
+
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./client
-    strategy:
-      matrix:
-        python-version: ["3.12"]
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      # Set up BuildKit Docker container builder to be able to build
+      # multi-platform images and export cache
+      # https://github.com/docker/setup-buildx-action
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
         with:
-          python-version: ${{ matrix.python-version }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install poetry
-        run: pip install poetry
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Install dependencies
-        run: |
-          poetry config virtualenvs.in-project true
-          poetry install --no-root
-
-      - name: Check code
-        run: |
-          poetry run mypy .
-          poetry run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-
-      - name: Run tests
-        run: poetry run pytest
-
-      # The version in PyPI must follow the PEP 440 standard.
-      # Semantic versioning is not supported by PyPI.
-      # Therefore, only the release version is published.
-      - name: Build and publish to pypi
-        run: |
-          if [[ ${{ github.ref }} =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "This is a version tag. Build and publish a package."
-            poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
-            poetry build
-            poetry publish
-          else
-            echo "This is not a version tag."
-          fi
+      # Build and push Docker image with Buildx (don't push on PR)
+      # https://github.com/docker/build-push-action
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
