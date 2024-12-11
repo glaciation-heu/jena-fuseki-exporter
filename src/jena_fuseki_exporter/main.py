@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    url: str = "http://localhost:3030/slice/"
+    url: str = "http://jena-fuseki.integration/slice/"
     query: str = """SELECT (COUNT(DISTINCT ?g) AS ?numGraphs)
 WHERE {
   GRAPH ?g {
