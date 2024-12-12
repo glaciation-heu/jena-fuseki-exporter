@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   jena-fuseki-exporter:
   - apiVersion: v2
+    appVersion: 1.0.35
+    created: "2024-12-12T23:26:02.023839284Z"
+    description: Metrics exporter from Apache Jena Fuseki to Prometheus
+    digest: cdcafc36bd3c977dc6a8c1771f462d47bd72f342e844e735b06203125f0e9479
+    name: jena-fuseki-exporter
+    type: application
+    urls:
+    - https://glaciation-heu.github.io/jena-fuseki-exporter/helm-charts/jena-fuseki-exporter-1.0.35.tgz
+    version: 1.0.35
+  - apiVersion: v2
     appVersion: 0.1.35
     created: "2024-12-12T23:22:26.416926928Z"
     description: Metrics exporter from Apache Jena Fuseki to Prometheus
@@ -142,4 +152,4 @@ entries:
     urls:
     - https://glaciation-heu.github.io/jena-fuseki-exporter/helm-charts/metadata-service-0.1.22.tgz
     version: 0.1.22
-generated: "2024-12-12T23:23:10.410394344Z"
+generated: "2024-12-12T23:26:02.023385941Z"
