@@ -6,7 +6,7 @@ The application exports information about the number of graphs from Apache Jena 
 
 ```mermaid
 sequenceDiagram
-    participant User
+    actor User
     participant Grafana
     participant Prometheus
     participant Jena Fuseki Exporter
