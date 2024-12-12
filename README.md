@@ -30,4 +30,4 @@ How to start locally
 1. `. .venv/bin/activate`
 1. `fastapi dev src/jena_fuseki_exporter/main.py`
 
-The repo contains a GitHub action. It builds and publish a container image, and publishes a Helm chart. To trigger it, set a Git tag.
+The repo contains a GitHub action. It builds and publishes a container image, and publishes a Helm chart. To trigger it, set a Git tag.
