@@ -56,6 +56,6 @@ async def retrieve() -> int:
             ),
             headers={"Content-Type": "application/x-www-form-urlencoded"},
         )
-        logging.warn(f"Downstream call POST {settings.url}")
+        logging.info(f"Downstream call POST {settings.url}")
         graphs_number = int(r.json()["results"]["bindings"][0]["numGraphs"]["value"])
     return graphs_number
