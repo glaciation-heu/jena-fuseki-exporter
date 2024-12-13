@@ -1,12 +1,13 @@
 import asyncio
-import logging
 from urllib.parse import urlencode, quote
 
 import httpx
-from cachetools import cached, TTLCache
+from cachetools import TTLCache
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import PlainTextResponse
 from pydantic_settings import BaseSettings
+
+from jena_fuseki_exporter.logger import logger
 
 
 class Settings(BaseSettings):
@@ -56,6 +57,6 @@ async def retrieve() -> int:
             ),
             headers={"Content-Type": "application/x-www-form-urlencoded"},
         )
-        logging.info(f"Downstream call POST {settings.url}")
+        logger.info(f"Downstream call POST {settings.url}")
         graphs_number = int(r.json()["results"]["bindings"][0]["numGraphs"]["value"])
     return graphs_number
