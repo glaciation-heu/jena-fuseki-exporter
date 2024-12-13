@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from urllib.parse import urlencode, quote
 
 import httpx
@@ -6,8 +7,6 @@ from cachetools import TTLCache
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import PlainTextResponse
 from pydantic_settings import BaseSettings
-
-from jena_fuseki_exporter.logger import logger
 
 
 class Settings(BaseSettings):
@@ -24,6 +23,7 @@ WHERE {
 settings = Settings()
 lock = asyncio.Lock()
 cache = TTLCache(maxsize=100_000, ttl=settings.cache_ttl)
+logger = logging.getLogger('uvicorn.info')
 app = FastAPI()
 
 
